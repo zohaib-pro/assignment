@@ -22,7 +22,13 @@ const CheckInGallery = () => {
       <Grid2 container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
         {items.map((item) => (
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
-            <CheckInCard key={item} />
+            <CheckInCard
+              key={item}
+              title="test card"
+              owner="tester"
+              imageSrc="/images/avatar.png"
+              date="12th Nov, 2022"
+            />
           </Grid2>
         ))}
       </Grid2>

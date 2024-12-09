@@ -1,16 +1,17 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Box } from "@mui/material";
 
 interface CheckInCardProps {
-
+    title: string,
+    imageSrc: string,
+    owner: string,
+    date: string,
 }
-const CheckInCard: React.FC<CheckInCardProps> =  () => {
+const CheckInCard: React.FC<CheckInCardProps> =  ({title, imageSrc, owner, date}) => {
   return (
     <Card
       sx={{
@@ -27,19 +28,19 @@ const CheckInCard: React.FC<CheckInCardProps> =  () => {
       />
       <CardContent sx={{display: 'flex', flexDirection: 'column', gap: 1, p: 1, paddingBottom: '0px !important'}}>
         <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
-          Lizard
+          {title}
         </Typography>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          12th Nov, 2022
+          {date}
         </Typography>
         <Box sx={{ display: "flex", gap: 1,  alignItems: 'center' }}>
           <Avatar
             alt="Avatar"
-            src="/images/avatar.png"
+            src={imageSrc}
             sx={{ width: 42, height: 42 }}
           />
           <Typography sx={{fontWeight: 'bold'}}>Owner: </Typography>
-          <Typography>John Doe </Typography>
+          <Typography>{owner} </Typography>
         </Box>
       </CardContent>
     </Card>
