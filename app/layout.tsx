@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             background: '#7B5AFF',
             borderRadius: '9999px', 
             textTransform: 'none',
+            color: 'white',
             '&:hover': {
               backgroundColor: '#40a9ff',
             },
@@ -33,7 +34,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     //     fontWeight: 700,
     //   },
     // },
-    spacing: 4,
   });
 
   return (
