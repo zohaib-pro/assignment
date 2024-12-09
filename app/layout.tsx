@@ -1,4 +1,5 @@
 'use client';
+import { BorderColor } from '@mui/icons-material';
 import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { ReactNode } from 'react';
 
@@ -22,6 +23,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             color: 'white',
             '&:hover': {
               backgroundColor: '#40a9ff',
+            },
+          },
+          outlined: {
+            border: '1px solid grey',
+            backgroundColor: 'white',
+            color: 'black',
+            '&:hover': {
+              color: '#40a9ff', // Set text color on hover
+              borderColor: '#40a9ff',
+              backgroundColor: 'white',
             },
           },
         },

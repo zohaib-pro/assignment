@@ -2,6 +2,8 @@ import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Banner from "./components/Banner";
 import CheckInGallery from "./components/CheckInGallery";
+import AddCheckInModal from "./components/modals/AddCheckInModal";
+import CheckInDetailModal from "./components/modals/CheckInDetailModal";
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
       <Header />
       <Banner />
       <CheckInGallery />
+      <AddCheckInModal />
+      <CheckInDetailModal />
     </Box>
   );
 }

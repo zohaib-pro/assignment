@@ -1,5 +1,4 @@
 import { Box, Grid2, IconButton, Typography } from "@mui/material";
-import React from "react";
 import CheckInCard from "./CheckInCard";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 const CheckInGallery = () => {
@@ -21,9 +20,8 @@ const CheckInGallery = () => {
 
       <Grid2 container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
         {items.map((item) => (
-          <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
+          <Grid2 key={item} size={{ xs: 12, sm: 6, md: 3 }}>
             <CheckInCard
-              key={item}
               title="test card"
               owner="tester"
               imageSrc="/images/avatar.png"
