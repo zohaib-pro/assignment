@@ -5,34 +5,54 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
 import DropZone from "../DropZone";
+import { closeModal1, openModal2 } from "@/app/redux/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import toast from "react-hot-toast";
 
 export default function AddCheckInModal() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+  const dispatch = useDispatch();
+  const modal1Open = useSelector(
+    (state: RootState) => state.checkIn.modal1Open
+  );
   const [title, setTitle] = useState("");
   const [img, setImg] = useState<File | null>();
 
+  const validate = () => {
+    var error = "";
+    if (!title) error = "Title not entered!";
+    else if (!img) error = "Image not selected!";
+    return error;
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("title", title);
-    console.log("file", img);
-    //console.log("Form submitted", formData);
-    // Here, you can send the form data to your server or API
+    const error = validate();
+    if (error){
+        toast.error(error);
+    }else{
+        dispatch(closeModal1());
+        dispatch(openModal2());
+    }
   };
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
-      <BaseModal open={open} title="test modal" onClose={handleClose}>
+      <BaseModal
+        open={modal1Open}
+        title="Add CheckIn"
+        onClose={() => {
+          dispatch(closeModal1());
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <Typography sx={{ fontWeight: "bold" }}>Title</Typography>
           <TextField
             label="Enter Title"
             name="title"
             value={title}
-            onChange={(evt)=>{setTitle(evt.target.value)}}
+            onChange={(evt) => {
+              setTitle(evt.target.value);
+            }}
             fullWidth
             margin="normal"
           />
@@ -44,7 +64,7 @@ export default function AddCheckInModal() {
           <Box
             sx={{ display: "flex", justifyContent: "flex-end", mt: 2, gap: 1 }}
           >
-            <Button variant="outlined">Cancel</Button>
+            <Button variant="outlined" onClick={()=>dispatch(closeModal1())}>Cancel</Button>
             <Button type="submit" variant="contained" color="primary">
               Submit
             </Button>

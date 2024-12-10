@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import CheckInAddButton from "./CheckInAddButton";
 
 const Banner = () => {
   return (
@@ -47,9 +48,7 @@ const Banner = () => {
         <Typography variant="body1">
           Lorem ipsus dolor sit amen, something important to say here
         </Typography>
-        <Button color="primary" sx={{ mt: "8px" }}>
-          Add Check In
-        </Button>
+        <CheckInAddButton />
       </Box>
     </Box>
   );

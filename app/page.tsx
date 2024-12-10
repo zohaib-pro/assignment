@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Banner from "./components/Banner";
 import CheckInGallery from "./components/CheckInGallery";
+import { Toaster } from "react-hot-toast";
 import AddCheckInModal from "./components/modals/AddCheckInModal";
 import CheckInDetailModal from "./components/modals/CheckInDetailModal";
 
@@ -20,6 +21,7 @@ export default function Home() {
       <CheckInGallery />
       <AddCheckInModal />
       <CheckInDetailModal />
+      <Toaster />
     </Box>
   );
 }

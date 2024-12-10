@@ -2,6 +2,8 @@
 import { BorderColor } from '@mui/icons-material';
 import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { ReactNode } from 'react';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const theme = createTheme({
@@ -51,10 +53,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <head />
       <body>
+        <Provider store={store}>
+
         <ThemeProvider theme={theme}>
           <CssBaseline /> {/* Normalize styles across browsers */}
           {children} {/* Render the content of the page */}
         </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );

@@ -1,16 +1,20 @@
 "use client";
 import { useState } from "react";
-import { Box, Grid2, TextField } from "@mui/material";
+import { Box, Grid2, TextField, useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
-import DropZone from "../DropZone";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { closeModal2 } from "@/app/redux/slice";
 
 export default function CheckInDetailModal() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const isModal2Open = useSelector(
+    (state: RootState) => state.checkIn.modal2Open
+  );
+
+  const dispatch = useDispatch();
 
   const [bookingId, setBookingId] = useState(1234);
   const [rooms, setRooms] = useState(0);
@@ -35,93 +39,110 @@ export default function CheckInDetailModal() {
     else toast.success("Done");
   };
 
+  const isMobile = useMediaQuery('(max-width:600px)');
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
-      <BaseModal open={open} title="test modal" onClose={handleClose}>
-        <Grid2 container columnSpacing={1}>
-          <Grid2 size={6}>
-            <form
-              onSubmit={handleSubmit}
-              style={{ display: "flex", flexDirection: "column", gap: 24 }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 1,
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography sx={{ fontWeight: "bold" }}>Booking ID</Typography>
-                <input
-                  type="number"
-                  style={{ width: 100 }}
-                  value={bookingId}
-                  onChange={(evt) => {
-                    setBookingId(evt.target.value as any);
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 1,
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography sx={{ fontWeight: "bold" }}>Rooms</Typography>
-                <input
-                  type="number"
-                  style={{ width: 32 }}
-                  value={rooms}
-                  onChange={(evt) => {
-                    setRooms(evt.target.value as any);
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 1,
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography sx={{ fontWeight: "bold" }}>
-                  Number of Guests
-                </Typography>
-                <input
-                  type="number"
-                  style={{ width: 32 }}
-                  value={guests}
-                  onChange={(evt) => {
-                    setGuests(evt.target.value as any);
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 1,
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography sx={{ fontWeight: "bold" }}>Booked Date</Typography>
-                <input type="date" value={date} onChange={(evt)=>{setDate(evt.target.value)}}/>
-              </Box>
-            </form>
-          </Grid2>
-          <Grid2 size={6}>
-            <img
-              src="/images/background.jpg"
-              style={{
-                width: 256,
-                height: 134,
-                objectFit: "cover",
-                borderRadius: 18,
+      <BaseModal
+        open={isModal2Open}
+        title="CheckIn Details"
+        onClose={() => {
+          dispatch(closeModal2());
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: isMobile ? "center" : "space-between",
+            width: isMobile? "90vw": "45vw",
+            gap: 1,
+            flexDirection: isMobile? 'column-reverse': 'row',
+          }}
+        >
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: 24, width: isMobile? '80%': undefined }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                justifyContent: "space-between",
               }}
-            />
-          </Grid2>
-        </Grid2>
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Booking ID</Typography>
+              <input
+                type="number"
+                style={{ width: 100 }}
+                value={bookingId}
+                onChange={(evt) => {
+                  setBookingId(evt.target.value as any);
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Rooms</Typography>
+              <input
+                type="number"
+                style={{ width: 32 }}
+                value={rooms}
+                onChange={(evt) => {
+                  setRooms(evt.target.value as any);
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>
+                Number of Guests
+              </Typography>
+              <input
+                type="number"
+                style={{ width: 32 }}
+                value={guests}
+                onChange={(evt) => {
+                  setGuests(evt.target.value as any);
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Booked Date</Typography>
+              <input
+                type="date"
+                value={date}
+                onChange={(evt) => {
+                  setDate(evt.target.value);
+                }}
+              />
+            </Box>
+          </form>
+
+          <img
+            src="/images/background.jpg"
+            style={{
+              width: isMobile? "82%" : 256,
+              height: 134,
+              objectFit: "cover",
+              borderRadius: 18,
+            }}
+          />
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -130,12 +151,11 @@ export default function CheckInDetailModal() {
             gap: 1,
           }}
         >
-          <Button variant="outlined">Cancel</Button>
+          <Button variant="outlined" onClick={()=>dispatch(closeModal2())}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
             Ok
           </Button>
         </Box>
-        <Toaster />
       </BaseModal>
     </div>
   );
