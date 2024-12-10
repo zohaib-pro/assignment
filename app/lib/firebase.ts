@@ -1,10 +1,7 @@
-// Import Firebase SDK modules
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA7bM-H49rgi40iCkJzTJerIjtcDOaYE4k",
   authDomain: "assignment-c388a.firebaseapp.com",
@@ -15,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-N2P7D0ZDES"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 export const firestore = getFirestore(app);

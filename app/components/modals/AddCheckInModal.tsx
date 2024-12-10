@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Box, TextField } from "@mui/material";
+import { Box, CircularProgress, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
@@ -9,6 +9,8 @@ import { closeModal1, openModal2 } from "@/app/redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import toast from "react-hot-toast";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/app/lib/firebase";
 
 export default function AddCheckInModal() {
   const dispatch = useDispatch();
@@ -16,7 +18,9 @@ export default function AddCheckInModal() {
     (state: RootState) => state.checkIn.modal1Open
   );
   const [title, setTitle] = useState("");
+  const [imgSrc, setImgSrc] = useState("");
   const [img, setImg] = useState<File | null>();
+  const [uploading, setUploading] = useState(false);
 
   const validate = () => {
     let error = "";
@@ -24,14 +28,30 @@ export default function AddCheckInModal() {
     else if (!img) error = "Image not selected!";
     return error;
   };
+
+  const handleUpload = async () => {
+    if (!img) return;
+    setUploading(true);
+
+    const storageRef = ref(storage, `uploads/${img?.name}`);
+    try {
+      const uploadResult = await uploadBytes(storageRef, img);
+      const downloadURL = await getDownloadURL(uploadResult.ref);
+      setImgSrc(downloadURL);
+    } catch (error) {
+      toast.error("Error uploading file!");
+    } finally {
+      setUploading(false);
+    }
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const error = validate();
-    if (error){
-        toast.error(error);
-    }else{
-        dispatch(closeModal1());
-        dispatch(openModal2());
+    if (error) {
+      toast.error(error);
+    } else {
+      dispatch(closeModal1());
+      dispatch(openModal2());
     }
   };
 
@@ -64,8 +84,11 @@ export default function AddCheckInModal() {
           <Box
             sx={{ display: "flex", justifyContent: "flex-end", mt: 2, gap: 1 }}
           >
-            <Button variant="outlined" onClick={()=>dispatch(closeModal1())}>Cancel</Button>
+            <Button variant="outlined" onClick={() => dispatch(closeModal1())}>
+              Cancel
+            </Button>
             <Button type="submit" variant="contained" color="primary">
+              {uploading && <CircularProgress />}
               Submit
             </Button>
           </Box>
