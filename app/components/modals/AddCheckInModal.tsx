@@ -16,7 +16,6 @@ export default function AddCheckInModal() {
   );
   const [title, setTitle] = useState("");
   const [img, setImg] = useState<File | null>();
-  const [uploading, setUploading] = useState(false);
 
   const validate = () => {
     let error = "";
@@ -38,8 +37,8 @@ export default function AddCheckInModal() {
     const error = validate();
     if (error) {
       toast.error(error);
-    } else {
-        convertToBase64(img!!, (img)=>{
+    } else if (img) {
+        convertToBase64(img, (img)=>{
             const data = {
                 img,
                 title
@@ -48,6 +47,8 @@ export default function AddCheckInModal() {
             dispatch(closeModal1());
             dispatch(openModal2());
         })
+    }else {
+        toast.error("No image selected!");
     }
   };
 
@@ -84,7 +85,6 @@ export default function AddCheckInModal() {
               Cancel
             </Button>
             <Button type="submit" variant="contained" color="primary">
-              {uploading && <CircularProgress />}
               Submit
             </Button>
           </Box>

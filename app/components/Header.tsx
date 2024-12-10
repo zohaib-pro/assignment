@@ -12,7 +12,7 @@ const Header = () => {
         justifyContent: "space-between",
         alignItems: "center",
         borderRadius: "20px",
-        boxShadow: "14px 17px 40px 0px rgba(112, 144, 176, 0.08)",
+        boxShadow: "14px 17px 40px 0px rgba(112, 144, 176, 0.2)",
       }}
     >
       <img src="/images/logo.png" width={32} height={32} />
