@@ -1,5 +1,4 @@
 'use client';
-import { BorderColor } from '@mui/icons-material';
 import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
