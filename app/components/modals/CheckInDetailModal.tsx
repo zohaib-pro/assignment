@@ -92,7 +92,7 @@ export default function CheckInDetailModal() {
                 style={{ width: 32 }}
                 value={rooms}
                 onChange={(evt) => {
-                  setRooms(evt.target.value as any);
+                  setRooms(Number(evt.target.value));
                 }}
               />
             </Box>
