@@ -21,7 +21,6 @@ const Header = () => {
           display: "flex",
           flexDirection: "row-reverse",
           alignItems: "center",
-          gap: "8px",
         }}
       >
         <Avatar

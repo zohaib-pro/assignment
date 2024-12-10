@@ -5,20 +5,16 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
 import DropZone from "../DropZone";
-import { closeModal1, openModal2 } from "@/app/redux/slice";
+import { closeModal1, openModal2, setFormData } from "@/app/redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import toast from "react-hot-toast";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/app/lib/firebase";
-
 export default function AddCheckInModal() {
   const dispatch = useDispatch();
   const modal1Open = useSelector(
     (state: RootState) => state.checkIn.modal1Open
   );
   const [title, setTitle] = useState("");
-  const [imgSrc, setImgSrc] = useState("");
   const [img, setImg] = useState<File | null>();
   const [uploading, setUploading] = useState(false);
 
@@ -29,29 +25,29 @@ export default function AddCheckInModal() {
     return error;
   };
 
-  const handleUpload = async () => {
-    if (!img) return;
-    setUploading(true);
-
-    const storageRef = ref(storage, `uploads/${img?.name}`);
-    try {
-      const uploadResult = await uploadBytes(storageRef, img);
-      const downloadURL = await getDownloadURL(uploadResult.ref);
-      setImgSrc(downloadURL);
-    } catch (error) {
-      toast.error("Error uploading file!");
-    } finally {
-      setUploading(false);
-    }
+  const convertToBase64 = (file: File, onComplete: (img: string)=>void) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      onComplete(reader.result as string);
+    };
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const error = validate();
     if (error) {
       toast.error(error);
     } else {
-      dispatch(closeModal1());
-      dispatch(openModal2());
+        convertToBase64(img!!, (img)=>{
+            const data = {
+                img,
+                title
+            };
+            dispatch(setFormData(data));
+            dispatch(closeModal1());
+            dispatch(openModal2());
+        })
     }
   };
 

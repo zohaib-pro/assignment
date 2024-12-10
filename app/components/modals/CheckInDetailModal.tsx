@@ -1,13 +1,17 @@
 "use client";
 import { useState } from "react";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { closeModal2 } from "@/app/redux/slice";
+import { addCheckIn, closeModal2, setFormData } from "@/app/redux/slice";
+import { firestore } from "@/app/lib/firebase";
+import { addDoc, collection } from "firebase/firestore";
+import { CheckIn } from "@/app/types/CheckIn";
+import { FirebaseError } from "firebase/app";
 
 export default function CheckInDetailModal() {
   const isModal2Open = useSelector(
@@ -16,12 +20,15 @@ export default function CheckInDetailModal() {
 
   const dispatch = useDispatch();
 
+  const formData = useSelector((state: RootState) => state.checkIn.formData);
+
   const [bookingId, setBookingId] = useState(1234);
   const [rooms, setRooms] = useState(0);
   const [guests, setGuests] = useState(0);
+  const [uploading, setUploading] = useState(false);
   const [date, setDate] = useState(() => {
     const today = new Date();
-    return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+    return today.toISOString().split("T")[0];
   });
 
   const validate = () => {
@@ -33,13 +40,38 @@ export default function CheckInDetailModal() {
     return error;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const error = validate();
     if (error) toast.error(error);
-    else toast.success("Done");
+    else {
+      setUploading(true);
+      try {
+        const data = {
+          ...formData,
+          bookingId,
+          rooms,
+          guests,
+          date,
+          owner: "John Doe",
+        };
+        console.log("sending data", data);
+        dispatch(setFormData(data));
+        const docRef = await addDoc(collection(firestore, "checkIns"), data);
+        dispatch(addCheckIn({ ...data, id: docRef.id } as CheckIn));
+        toast.success("CheckIn Added");
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        if (e instanceof FirebaseError && e.message.includes("bytes"))
+          toast.error("Image must be less than 1 mb");
+        else toast.error("Error to check in");
+      } finally {
+        setUploading(false);
+        dispatch(closeModal2());
+      }
+    }
   };
 
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery("(max-width:600px)");
   return (
     <div>
       <BaseModal
@@ -53,14 +85,19 @@ export default function CheckInDetailModal() {
           sx={{
             display: "flex",
             justifyContent: isMobile ? "center" : "space-between",
-            width: isMobile? "90vw": "45vw",
+            width: isMobile ? "90vw" : "45vw",
             gap: 1,
-            flexDirection: isMobile? 'column-reverse': 'row',
+            flexDirection: isMobile ? "column-reverse" : "row",
           }}
         >
           <form
             onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: 24, width: isMobile? '80%': undefined }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 24,
+              width: isMobile ? "80%" : undefined,
+            }}
           >
             <Box
               sx={{
@@ -134,9 +171,9 @@ export default function CheckInDetailModal() {
           </form>
 
           <img
-            src="/images/background.jpg"
+            src={(formData as CheckIn).img}
             style={{
-              width: isMobile? "82%" : 256,
+              width: isMobile ? "82%" : 256,
               height: 134,
               objectFit: "cover",
               borderRadius: 18,
@@ -151,10 +188,18 @@ export default function CheckInDetailModal() {
             gap: 1,
           }}
         >
-          <Button variant="outlined" onClick={()=>dispatch(closeModal2())}>Cancel</Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
+          <Button variant="outlined" onClick={() => dispatch(closeModal2())}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={uploading}
+            variant="contained"
+            color="primary"
+          >
             Ok
           </Button>
+          {uploading && <CircularProgress color="primary" />}
         </Box>
       </BaseModal>
     </div>

@@ -23,7 +23,7 @@ const CheckInCard: React.FC<CheckInCardProps> =  ({title, imageSrc, owner, date}
     >
       <CardMedia
         sx={{ height: 160, borderRadius: "16px" }}
-        image="/images/background.jpg"
+        image={imageSrc}
         title="green iguana"
       />
       <CardContent sx={{display: 'flex', flexDirection: 'column', gap: 1, p: 1, paddingBottom: '0px !important'}}>
