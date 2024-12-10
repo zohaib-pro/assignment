@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Box, Grid2, TextField, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
@@ -25,7 +25,7 @@ export default function CheckInDetailModal() {
   });
 
   const validate = () => {
-    var error = "";
+    let error = "";
     if (!bookingId) error = "Booking ID not Set!";
     else if (!rooms) error = "Number of rooms not selected!";
     else if (!guests) error = "Number of guests not selected!";
@@ -75,7 +75,7 @@ export default function CheckInDetailModal() {
                 style={{ width: 100 }}
                 value={bookingId}
                 onChange={(evt) => {
-                  setBookingId(evt.target.value as any);
+                  setBookingId(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -111,7 +111,7 @@ export default function CheckInDetailModal() {
                 style={{ width: 32 }}
                 value={guests}
                 onChange={(evt) => {
-                  setGuests(evt.target.value as any);
+                  setGuests(Number(evt.target.value));
                 }}
               />
             </Box>

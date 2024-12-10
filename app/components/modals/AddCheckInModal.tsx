@@ -19,7 +19,7 @@ export default function AddCheckInModal() {
   const [img, setImg] = useState<File | null>();
 
   const validate = () => {
-    var error = "";
+    let error = "";
     if (!title) error = "Title not entered!";
     else if (!img) error = "Image not selected!";
     return error;
