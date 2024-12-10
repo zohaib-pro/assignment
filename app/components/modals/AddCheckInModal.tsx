@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Box, CircularProgress, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BaseModal from "./BaseModal";
